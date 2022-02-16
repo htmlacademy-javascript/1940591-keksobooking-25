@@ -1,6 +1,6 @@
 # Личный проект «Кексобукинг»
 
-* Студент: [Ikrom Rahimov](https://up.htmlacademy.ru/javascript/25/user/1940591).
+* Студент: [Ikrom Rahimov](https://htmlacademy.ru/profile/id1940591).
 * Наставник: [Rail Sakhaviev](https://htmlacademy.ru/profile/id1331891).
 
 ---
