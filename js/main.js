@@ -1,39 +1,21 @@
-function generateRandomInteger(min, max) {
-  if ((typeof min === 'number' && typeof max === 'number') && (min >= 0 && min < max)) {
-    const difference = Math.floor(max) - Math.ceil(min);
+function generateRandomPositiveInteger(a, b) {
+  const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
+  const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
 
-    let randomInteger = Math.ceil(Math.random() * difference);
-    randomInteger += Math.ceil(min);
+  const result = Math.random() * (upper - lower + 1) + lower;
 
-    return randomInteger;
-  }
-
-  const errorMessage = 'Неверно задан диапазон';
-
-  return errorMessage;
+  return Math.floor(result);
 }
 
-generateRandomInteger(2, 5);
+generateRandomPositiveInteger(2, 5);
 
-function generateRandomFloat(min, max, symbolsQuantity) {
-  if ((typeof min === 'number' && typeof max === 'number' && typeof symbolsQuantity === 'number') && (min >= 0 && min < max && symbolsQuantity >= 0)) {
+function generateRandomPositiveFloat(a, b, digits = 1) {
+  const lower = Math.min(Math.abs(a), Math.abs(b));
+  const upper = Math.max(Math.abs(a), Math.abs(b));
 
-    const difference = Math.floor(max) - Math.ceil(min);
-    const fractionalNumbers = Math.pow(10, symbolsQuantity);
+  const result = Math.random() * (upper - lower + 1) + lower;
 
-    let randomFloat = Math.random() * difference + Math.ceil(min);
-    randomFloat = Math.floor(randomFloat * fractionalNumbers) / fractionalNumbers;
-
-    return randomFloat;
-  }
-
-  let errorMessage = 'Неверно задан диапазон';
-
-  if (symbolsQuantity < 0 || typeof symbolsQuantity !== 'number') {
-    errorMessage = 'Неверно задан количество знаков после запятой';
-  }
-
-  return errorMessage;
+  return +result.toFixed(digits);
 }
 
-generateRandomFloat(56.544, 65.654, 9);
+generateRandomPositiveFloat(56.544, 65.654, 9);
