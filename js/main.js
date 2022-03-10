@@ -1,4 +1,3 @@
-import {getOffers} from './data.js';
+import { getOffers } from './templates.js';
 
-// eslint-disable-next-line no-console
-console.log(getOffers(10));
+document.querySelector('#map-canvas').append(getOffers(1));
