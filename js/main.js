@@ -1,3 +1,3 @@
-import { getOffers } from './templates.js';
+import {disablePage} from './page-mode.js';
 
-document.querySelector('#map-canvas').append(getOffers(1));
+disablePage();
