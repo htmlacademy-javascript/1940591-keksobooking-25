@@ -28,7 +28,7 @@ const titles = [
   'Новый дом в коттеджном поселке',
 ];
 
-const getOffers = (quantity) => Array.from({ length: quantity }, (_, i) => {
+const generateOffers = (quantity) => Array.from({ length: quantity }, (_, i) => {
   const latitude = getRandomFloat(35.65000, 35.70000, 5);
   const longitude = getRandomFloat(139.70000, 139.80000, 5);
   i++;
@@ -58,4 +58,4 @@ const getOffers = (quantity) => Array.from({ length: quantity }, (_, i) => {
   };
 });
 
-export {getOffers};
+export { generateOffers };

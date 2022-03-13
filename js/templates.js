@@ -1,5 +1,3 @@
-import { getOffers as getOffersData } from './data.js';
-
 const types = {
   'palace': 'Дворец',
   'flat': 'Квартира',
@@ -8,52 +6,32 @@ const types = {
   'hotel': 'Отель',
 };
 
-const getOffers = (quantity) => {
-  const data = getOffersData(quantity);
-  const offerTemplate = document.querySelector('#card')
-    .content
-    .children[0];
-  const fragment = document.createDocumentFragment();
+const renderOfferFeatures = (features) => features
+  .map((feature) => `<li class="popup__feature popup__feature--${feature}"></li>`)
+  .join('');
 
-  data.forEach(({ author, offer }) => {
-    const offerCard = offerTemplate.cloneNode(true);
+const renderOfferPhotos = (photos) => photos
+  .map((url) => `<img src="${url}" class="popup__photo" width="45" height="40" alt="Фотография жилья">`)
+  .join('');
 
-    offerCard.querySelector('.popup__avatar').src = author.avatar;
-    offerCard.querySelector('.popup__title').textContent = offer.title;
-    offerCard.querySelector('.popup__text--address').textContent = offer.address;
-    offerCard.querySelector('.popup__text--price').innerHTML = `${offer.price} <span>₽/ночь</span>`;
-    offerCard.querySelector('.popup__type').textContent = types[offer.type];
-    offerCard.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
-    offerCard.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
+const renderOffers = (offers) => offers
+  .map(({ author, offer }) => `
+    <article class="popup">
+      <img src="${author.avatar}" class="popup__avatar" width="70" height="70" alt="Аватар пользователя">
+      <h3 class="popup__title">${offer.title}</h3>
+      <p class="popup__text popup__text--address">${offer.address}</p>
+      <p class="popup__text popup__text--price">${offer.price} <span>₽/ночь</span></p>
+      <h4 class="popup__type">${types[offer.type]}</h4>
+      <p class="popup__text popup__text--capacity">${offer.rooms} комнаты для ${offer.guests} гостей</p>
+      <p class="popup__text popup__text--time">Заезд после ${offer.checkin}, выезд до ${offer.checkout}</p>
+      <ul class="popup__features">
+        ${renderOfferFeatures(offer.features)}
+      </ul>
+      <p class="popup__description">${offer.description}</p>
+      <div class="popup__photos">
+        ${renderOfferPhotos(offer.photos)}
+      </div>
+    </article>`)
+  .join('');
 
-    offerCard.querySelectorAll('.popup__feature')
-      .forEach((element) => {
-        const isNeccessary = offer.features.some(
-          (feature) => element.classList.contains(`popup__feature--${feature}`)
-        );
-
-        if (isNeccessary) {
-          element.remove();
-        }
-      });
-
-    offerCard.querySelector('.popup__description').textContent = offer.description;
-
-    const photos = offerCard.querySelector('.popup__photos');
-    offer.photos.forEach((url, i) => {
-      if (i === 0) {
-        photos.children[0].src = url;
-      } else {
-        const photo = photos.children[0].cloneNode(true);
-        photo.src = url;
-        photos.append(photo);
-      }
-    });
-
-    fragment.append(offerCard);
-  });
-
-  return fragment;
-};
-
-export { getOffers };
+export { renderOffers };
