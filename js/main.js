@@ -1,3 +1,1 @@
-import {disablePage} from './page-mode.js';
-
-disablePage();
+import './forms.js';
