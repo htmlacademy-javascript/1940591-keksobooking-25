@@ -30,6 +30,37 @@ const offerFormConfig = {
 
 const pristine = new Pristine(offerForm, offerFormConfig, true);
 
+const typeOption = {
+  'bungalow': 0,
+  'flat': 1000,
+  'hotel': 3000,
+  'house': 5000,
+  'palace': 10000,
+};
+const type = offerForm.querySelector('select[name="type"]');
+const price = offerForm.querySelector('input[name="price"]');
+const typeChangeHandler = () => {
+  price.placeholder = typeOption[type.value];
+};
+const validatePrice = () => price.value >= typeOption[type.value];
+const getPriceErrorMessage = () => `Минимальная цена ${typeOption[type.value]}`;
+
+pristine.addValidator(price, validatePrice, getPriceErrorMessage);
+type.addEventListener('change', typeChangeHandler);
+
+const times = offerForm.querySelectorAll('.ad-form__element--time select');
+const timesChangeHandler = (evt) => {
+  if (evt.target.id === 'timein') {
+    times[1].value = evt.target.value;
+  } else {
+    times[0].value = evt.target.value;
+  }
+};
+
+times.forEach((time) => {
+  time.addEventListener('change', timesChangeHandler);
+});
+
 const rooms = offerForm.querySelector('select[name="rooms"]');
 const capacity = offerForm.querySelector('select[name="capacity"]');
 const roomsOption = {
