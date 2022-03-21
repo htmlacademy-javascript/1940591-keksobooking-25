@@ -37,7 +37,45 @@ const typeOption = {
 };
 const type = offerForm.querySelector('select[name="type"]');
 const price = offerForm.querySelector('input[name="price"]');
-pristine.addValidator(price, () => price.value >= typeOption[type.value], () => `Минимальная цена ${typeOption[type.value]}`);
+const slider = offerForm.querySelector('.ad-form__slider');
+
+noUiSlider.create(slider, {
+  start: typeOption[type.value],
+  connect: 'lower',
+  range: {
+    'min': 0,
+    'max': 100000
+  },
+  step: 1,
+  format: {
+    to: function(value) {
+      if (Number.isInteger(value)) {
+        return value.toFixed(0);
+      }
+      return value.toFixed(0);
+    },
+    from: function(value) {
+      return parseInt(value, 10);
+    },
+  },
+});
+
+slider.noUiSlider.on('update', () => {
+  price.value = slider.noUiSlider.get();
+});
+
+price.addEventListener('input', () => {
+  slider.noUiSlider.updateOptions({
+    start: price.value,
+  });
+});
+
+pristine.addValidator(
+  price,
+  () => price.value >= typeOption[type.value],
+  () => `Минимальная цена ${typeOption[type.value]}`
+);
+
 type.addEventListener('change', () => { price.placeholder = typeOption[type.value]; });
 
 const timein = offerForm.querySelector('select[name="timein"]');
@@ -53,7 +91,11 @@ const roomsOption = {
   '3': ['1', '2', '3'],
   '100': ['0']
 };
-pristine.addValidator(rooms, () => roomsOption[rooms.value].includes(capacity.value), () => rooms.value === '100' ? '100 комнат не для гостей' : 'Недопустимое количество мест');
+pristine.addValidator(
+  rooms,
+  () => roomsOption[rooms.value].includes(capacity.value),
+  () => rooms.value === '100' ? '100 комнат не для гостей' : 'Недопустимое количество мест'
+);
 
 const offerFormSubmitHandler = (evt) => {
   evt.preventDefault();
