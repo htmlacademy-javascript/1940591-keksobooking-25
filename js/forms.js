@@ -110,4 +110,6 @@ const offerFormSubmitHandler = (evt) => {
 };
 offerForm.addEventListener('submit', offerFormSubmitHandler);
 
-export { disableForms, enableForms };
+disableForms();
+
+export { enableForms };
