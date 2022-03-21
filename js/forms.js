@@ -49,15 +49,12 @@ noUiSlider.create(slider, {
   step: 1,
   format: {
     to: function(value) {
-      if (Number.isInteger(value)) {
-        return value.toFixed(0);
-      }
       return value.toFixed(0);
     },
     from: function(value) {
       return parseInt(value, 10);
     },
-  },
+  }
 });
 
 slider.noUiSlider.on('update', () => {
@@ -65,9 +62,7 @@ slider.noUiSlider.on('update', () => {
 });
 
 price.addEventListener('input', () => {
-  slider.noUiSlider.updateOptions({
-    start: price.value,
-  });
+  slider.noUiSlider.updateOptions({ start: price.value });
 });
 
 pristine.addValidator(
@@ -76,7 +71,15 @@ pristine.addValidator(
   () => `Минимальная цена ${typeOption[type.value]}`
 );
 
-type.addEventListener('change', () => { price.placeholder = typeOption[type.value]; });
+type.addEventListener('change', () => {
+  price.placeholder = typeOption[type.value];
+  slider.noUiSlider.updateOptions({
+    range: {
+      'min': typeOption[type.value],
+      'max': 100000
+    }
+  });
+});
 
 const timein = offerForm.querySelector('select[name="timein"]');
 const timeout = offerForm.querySelector('select[name="timeout"]');
