@@ -13,7 +13,7 @@ const photos = [
 const descriptions = [
   'Новый коттедж общей площадью 596 м2, включая гараж, расположен на участке площадью 23,23 соток.',
   'Новый дом классической архитектуры на красивом участке у природного озера.',
-  'Абсолютно вся инфраструктура в шаговой доступности! В пешей доступности школа, дет сады, супермаркеты, газпромовская база отдыха Воскресенское со спортивным бассейном и сауной, боулингом и бильярдом, теннисным кортом и фитнес центром и вся необходимая инфраструктура!',
+  'Абсолютно вся инфраструктура в шаговой доступности!',
   'Коттеджный поселок с инфраструктурой городского уровня, расположенный в сосновом лесу недалеко от аэропорта Внуково.',
   'Продается коттедж в КП Калужские усадьбы, общей площадью 1499 кв.м., участок 16 сот.',
 ];
@@ -28,7 +28,7 @@ const titles = [
   'Новый дом в коттеджном поселке',
 ];
 
-const generateOffers = (quantity) => Array.from({ length: quantity }, (_, i) => {
+const generateOffers = (quantity = 10) => Array.from({ length: quantity }, (_, i) => {
   const latitude = getRandomFloat(35.65000, 35.70000, 5);
   const longitude = getRandomFloat(139.70000, 139.80000, 5);
   i++;
@@ -36,7 +36,7 @@ const generateOffers = (quantity) => Array.from({ length: quantity }, (_, i) => 
     author: {
       id: i,
       name: `${getRandomArrayElement(names)} ${getRandomArrayElement(surnames)}`,
-      avatar: `img/avatars/user${i.toString().padStart(2, '0')}.png`,
+      avatar: `img/avatars/user${getRandomInteger(1, 10).toString().padStart(2, '0')}.png`,
     },
     offer: {
       title: getRandomArrayElement(titles),

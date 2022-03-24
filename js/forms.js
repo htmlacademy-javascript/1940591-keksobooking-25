@@ -49,7 +49,7 @@ noUiSlider.create(slider, {
   step: 1,
   format: {
     to: function(value) {
-      return value.toFixed(0);
+      return +value.toFixed(0);
     },
     from: function(value) {
       return parseInt(value, 10);
@@ -110,6 +110,4 @@ const offerFormSubmitHandler = (evt) => {
 };
 offerForm.addEventListener('submit', offerFormSubmitHandler);
 
-disableForms();
-
-export { enableForms };
+export { disableForms, enableForms };

@@ -1,18 +1,18 @@
-import { enableForms } from './forms.js';
+import { disableForms, enableForms } from './forms.js';
 import { generateOffers } from './data.js';
 import { renderOffer } from './templates.js';
 
-const coordinates = { lat: 35.65283, lng: 139.83947 };
+disableForms();
+
+const centerCoordinates = { lat: 35.65283, lng: 139.83947 };
 const zoom = 12;
-const offers = generateOffers(10);
 const address = document.querySelector('input[name="address"]');
-address.value = `${coordinates.lat}, ${coordinates.lng}`;
+
+address.value = `${centerCoordinates.lat}, ${centerCoordinates.lng}`;
 
 const map = L.map('map-canvas')
-  .on('load', () => {
-    enableForms();
-  })
-  .setView(coordinates, zoom);
+  .on('load', () => { enableForms(); })
+  .setView(centerCoordinates, zoom);
 
 L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -26,7 +26,7 @@ const mainIcon = L.icon({
   iconAnchor: [26, 52],
 });
 
-const mainMarker = L.marker(coordinates, {
+const mainMarker = L.marker(centerCoordinates, {
   draggable: true,
   icon: mainIcon,
 });
@@ -37,6 +37,7 @@ mainMarker.on('moveend', (evt) => {
   address.value = `${evt.target.getLatLng().lat.toFixed(5)}, ${evt.target.getLatLng().lng.toFixed(5)}`;
 });
 
+const offers = generateOffers(10);
 const icon = L.icon({
   iconUrl: 'img/pin.svg',
   iconSize: [40, 40],
