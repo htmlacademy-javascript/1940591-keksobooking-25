@@ -14,7 +14,7 @@ const renderOfferPhotos = (photos) => photos
   .map((url) => `<img src="${url}" class="popup__photo" width="45" height="40" alt="Фотография жилья">`)
   .join('');
 
-const renderOffer = (offer) => `
+const createOfferPopup = (offer) => `
     <article class="popup">
       <img src="${offer.author.avatar}" class="popup__avatar" width="70" height="70" alt="Аватар пользователя">
       <h3 class="popup__title">${offer.offer.title}</h3>
@@ -32,4 +32,4 @@ const renderOffer = (offer) => `
       </div>
     </article>`;
 
-export { renderOffer };
+export { createOfferPopup };

@@ -14,7 +14,8 @@ const getOffers = (onSuccess, onFail) => fetch('https://25.javascript.pages.acad
   });
 
 const sendOffer = (onSuccess, onFail, body) => fetch(
-  'https://25.javascript.pages.academy/keksobooking', {
+  'https://25.javascript.pages.academy/keksobooking',
+  {
     method: 'post',
     body,
   })

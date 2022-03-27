@@ -1,32 +1,36 @@
-import { renderOffer } from './templates.js';
+import { createOfferPopup } from './templates.js';
+import { setAddress } from './form.js';
 
-const centerCoordinates = { lat: 35.68271, lng: 139.75352 };
-const zoom = 14;
-const address = document.querySelector('input[name="address"]');
+let map;
+
+const centerCoordinates = {
+  lat: 35.68271,
+  lng: 139.75352,
+};
+
+const ZOOM_LEVEL = 14;
+
 const icon = L.icon({
   iconUrl: 'img/pin.svg',
   iconSize: [40, 40],
   iconAnchor: [20, 40],
 });
+
 const mainIcon = L.icon({
   iconUrl: 'img/main-pin.svg',
   iconSize: [52, 52],
   iconAnchor: [26, 52],
 });
+
 const mainMarker = L.marker(centerCoordinates, {
   draggable: true,
   icon: mainIcon,
 });
 
-address.value = `${centerCoordinates.lat}, ${centerCoordinates.lng}`;
-
-let indicateOffers = () => {};
-let setInitialAddress = () => {};
-
-const setMap = (onSuccess) => {
-  const map = L.map('map-canvas')
+const initMap = (onSuccess) => {
+  map = L.map('map-canvas')
     .on('load', onSuccess)
-    .setView(centerCoordinates, zoom);
+    .setView(centerCoordinates, ZOOM_LEVEL);
 
   L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -35,27 +39,25 @@ const setMap = (onSuccess) => {
   ).addTo(map);
 
   mainMarker.addTo(map);
+  setAddress(`${centerCoordinates.lat}, ${centerCoordinates.lng}`);
 
   mainMarker.on('moveend', (evt) => {
-    address.value = `${+evt.target.getLatLng().lat.toFixed(5)}, ${+evt.target.getLatLng().lng.toFixed(5)}`;
+    const { lat, lng } = evt.target.getLatLng();
+    setAddress(`${lat.toFixed(5)}, ${lng.toFixed(5)}`);
   });
-
-  indicateOffers = (offers) => {
-    offers.forEach((offer) => {
-      const marker = L.marker(offer.location, { icon });
-      marker.addTo(map).bindPopup(renderOffer(offer));
-    });
-  };
-
-  setInitialAddress = () => {
-    map.setView(centerCoordinates, zoom)
-      .closePopup();
-
-    mainMarker.setLatLng(centerCoordinates);
-
-    address.value = `${centerCoordinates.lat}, ${centerCoordinates.lng}`;
-  };
 };
 
+const renderMarkers = (offers) => {
+  offers.forEach((offer) => {
+    const marker = L.marker(offer.location, { icon });
+    marker.addTo(map).bindPopup(createOfferPopup(offer));
+  });
+};
 
-export { setMap, indicateOffers, setInitialAddress };
+const resetMap = () => {
+  map.setView(centerCoordinates, ZOOM_LEVEL).closePopup();
+  mainMarker.setLatLng(centerCoordinates);
+  setAddress(`${centerCoordinates.lat}, ${centerCoordinates.lng}`);
+};
+
+export { initMap, renderMarkers, resetMap };

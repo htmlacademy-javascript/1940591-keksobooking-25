@@ -1,11 +1,46 @@
 import { showFailPopup, showSuccessPopup } from './popups.js';
-import { isFormValid } from './offer-form-validation.js';
-import { setPagesInitialState } from './page-state.js';
+import { isFormValid } from './form-validation.js';
 import { sendOffer } from './api.js';
+import { resetMap } from './map.js';
 
 const form = document.querySelector('.ad-form');
+const price = form.querySelector('input[name="price"]');
+const address = form.querySelector('input[name="address"]');
 const submitButton = form.querySelector('button[type="submit"]');
 const resetButton = form.querySelector('button[type="reset"]');
+
+const forms = document.querySelectorAll('form');
+
+const disablePage = () => {
+  forms.forEach((el) => {
+    el.classList.add(`${el.classList[0]}--disabled`);
+    el.childNodes.forEach((element) => {
+      element.disabled = true;
+    });
+  });
+};
+
+const enablePage = () => {
+  forms.forEach((el) => {
+    el.classList.remove(`${el.classList[0]}--disabled`);
+    el.childNodes.forEach((element) => {
+      element.disabled = false;
+    });
+  });
+};
+
+const resetPage = () => {
+  forms.forEach((el) => {
+    el.reset();
+  });
+  price.setAttribute('placeholder', '1000');
+
+  resetMap();
+};
+
+const setAddress = (value) => {
+  address.value = value;
+};
 
 const disableSubmitButton = () => {
   submitButton.disabled = true;
@@ -25,7 +60,7 @@ const offerFormSubmitHandler = (evt) => {
     sendOffer(
       () => {
         enableSubmitButton();
-        setPagesInitialState();
+        resetPage();
         showSuccessPopup();
       },
       () => {
@@ -36,15 +71,12 @@ const offerFormSubmitHandler = (evt) => {
   }
 };
 
-const setOfferFormSubmit = () => {
+const initForm = () => {
   form.addEventListener('submit', offerFormSubmitHandler);
-};
-
-const setOfferFormReset = () => {
   resetButton.addEventListener('click', (evt) => {
     evt.preventDefault();
-    setPagesInitialState();
+    resetPage();
   });
 };
 
-export { setOfferFormSubmit, setOfferFormReset };
+export { disablePage, enablePage, resetPage, setAddress, initForm };

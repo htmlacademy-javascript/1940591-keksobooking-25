@@ -1,14 +1,18 @@
-import { disablePage, enablePage } from './page-state.js';
-import { setOfferFormSubmit, setOfferFormReset } from './offer-form.js';
-import { setMap, indicateOffers } from './map.js';
+import { disablePage, enablePage, initForm } from './form.js';
+import { initMap, renderMarkers } from './map.js';
+import { showFailMessage } from './popups.js';
 import { getOffers } from './api.js';
-import { showFailMessage } from './util.js';
 
 disablePage();
 
-setMap(enablePage);
+initForm();
 
-getOffers(indicateOffers, showFailMessage);
-
-setOfferFormSubmit();
-setOfferFormReset();
+initMap(() => {
+  getOffers(
+    (offers) => {
+      renderMarkers(offers);
+      enablePage();
+    },
+    showFailMessage
+  );
+});

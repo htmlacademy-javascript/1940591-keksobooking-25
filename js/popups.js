@@ -43,4 +43,16 @@ function failPopupKeydownHandler(evt) {
   }
 }
 
-export { showSuccessPopup, showFailPopup };
+const showFailMessage = (message) => {
+  const fail = document.createElement('div');
+  fail.classList.add('fail');
+  fail.textContent = message;
+
+  document.body.insertAdjacentElement('beforebegin', fail);
+
+  setTimeout(() => {
+    fail.remove();
+  }, 5000);
+};
+
+export { showSuccessPopup, showFailPopup, showFailMessage };
