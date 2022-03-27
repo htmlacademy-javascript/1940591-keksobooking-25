@@ -24,11 +24,11 @@ const renderOffer = (offer) => `
       <p class="popup__text popup__text--capacity">${offer.offer.rooms} комнаты для ${offer.offer.guests} гостей</p>
       <p class="popup__text popup__text--time">Заезд после ${offer.offer.checkin}, выезд до ${offer.offer.checkout}</p>
       <ul class="popup__features">
-        ${renderOfferFeatures(offer.offer.features)}
+        ${offer.offer.features ? renderOfferFeatures(offer.offer.features) : null}
       </ul>
       <p class="popup__description">${offer.offer.description}</p>
       <div class="popup__photos">
-        ${renderOfferPhotos(offer.offer.photos)}
+        ${offer.offer.photos ? renderOfferPhotos(offer.offer.photos) : null}
       </div>
     </article>`;
 

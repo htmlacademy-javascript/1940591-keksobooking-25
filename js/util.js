@@ -36,10 +36,23 @@ const getRandomArrayElement = (array) => array[getRandomInteger(0, array.length 
 
 const getRandomArray = (array) => Array.from({ length: getRandomInteger(1, array.length) }, (_, i) => array[i]);
 
+const showFailMessage = (message) => {
+  const fail = document.createElement('div');
+  fail.classList.add('fail');
+  fail.textContent = message;
+
+  document.body.insertAdjacentElement('beforebegin', fail);
+
+  setTimeout(() => {
+    fail.remove();
+  }, 5000);
+};
+
 export {
   getRandomInteger,
   getRandomFloat,
   getRandomId,
   getRandomArrayElement,
   getRandomArray,
+  showFailMessage,
 };
