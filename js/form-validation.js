@@ -1,25 +1,6 @@
-const forms = document.querySelectorAll('form');
+const form = document.querySelector('.ad-form');
 
-const disableForms = () => {
-  forms.forEach((form) => {
-    form.classList.add(`${form.classList[0]}--disabled`);
-    form.childNodes.forEach((element) => {
-      element.disabled = true;
-    });
-  });
-};
-
-const enableForms = () => {
-  forms.forEach((form) => {
-    form.classList.remove(`${form.classList[0]}--disabled`);
-    form.childNodes.forEach((element) => {
-      element.disabled = false;
-    });
-  });
-};
-
-const offerForm = forms[1];
-const pristine = new Pristine(offerForm, {
+const pristine = window.Pristine(form, {
   classTo: 'ad-form__element',
   errorClass: 'ad-form__element--invalid',
   successClass: 'ad-form__element--valid',
@@ -28,6 +9,9 @@ const pristine = new Pristine(offerForm, {
   errorTextClass: 'ad-form__error'
 }, true);
 
+const type = form.querySelector('select[name="type"]');
+const price = form.querySelector('input[name="price"]');
+const slider = form.querySelector('.ad-form__slider');
 const typeOption = {
   'bungalow': 0,
   'flat': 1000,
@@ -35,9 +19,6 @@ const typeOption = {
   'house': 5000,
   'palace': 10000,
 };
-const type = offerForm.querySelector('select[name="type"]');
-const price = offerForm.querySelector('input[name="price"]');
-const slider = offerForm.querySelector('.ad-form__slider');
 
 noUiSlider.create(slider, {
   start: typeOption[type.value],
@@ -49,7 +30,7 @@ noUiSlider.create(slider, {
   step: 1,
   format: {
     to: function(value) {
-      return value.toFixed(0);
+      return +value.toFixed(0);
     },
     from: function(value) {
       return parseInt(value, 10);
@@ -81,13 +62,13 @@ type.addEventListener('change', () => {
   });
 });
 
-const timein = offerForm.querySelector('select[name="timein"]');
-const timeout = offerForm.querySelector('select[name="timeout"]');
+const timein = form.querySelector('select[name="timein"]');
+const timeout = form.querySelector('select[name="timeout"]');
 timein.addEventListener('change', (evt) => { timeout.value = evt.target.value; });
 timeout.addEventListener('change', (evt) => { timein.value = evt.target.value; });
 
-const rooms = offerForm.querySelector('select[name="rooms"]');
-const capacity = offerForm.querySelector('select[name="capacity"]');
+const rooms = form.querySelector('select[name="rooms"]');
+const capacity = form.querySelector('select[name="capacity"]');
 const roomsOption = {
   '1': ['1'],
   '2': ['1', '2'],
@@ -100,16 +81,6 @@ pristine.addValidator(
   () => rooms.value === '100' ? '100 комнат не для гостей' : 'Недопустимое количество мест'
 );
 
-const offerFormSubmitHandler = (evt) => {
-  evt.preventDefault();
-  if (pristine.validate()) {
-    evt.target.submit();
-  } else {
-    return false;
-  }
-};
-offerForm.addEventListener('submit', offerFormSubmitHandler);
+const isFormValid = () => pristine.validate();
 
-disableForms();
-
-export { enableForms };
+export { isFormValid };

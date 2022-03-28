@@ -14,7 +14,7 @@ const renderOfferPhotos = (photos) => photos
   .map((url) => `<img src="${url}" class="popup__photo" width="45" height="40" alt="Фотография жилья">`)
   .join('');
 
-const renderOffer = (offer) => `
+const createOfferPopup = (offer) => `
     <article class="popup">
       <img src="${offer.author.avatar}" class="popup__avatar" width="70" height="70" alt="Аватар пользователя">
       <h3 class="popup__title">${offer.offer.title}</h3>
@@ -24,12 +24,12 @@ const renderOffer = (offer) => `
       <p class="popup__text popup__text--capacity">${offer.offer.rooms} комнаты для ${offer.offer.guests} гостей</p>
       <p class="popup__text popup__text--time">Заезд после ${offer.offer.checkin}, выезд до ${offer.offer.checkout}</p>
       <ul class="popup__features">
-        ${renderOfferFeatures(offer.offer.features)}
+        ${offer.offer.features ? renderOfferFeatures(offer.offer.features) : null}
       </ul>
       <p class="popup__description">${offer.offer.description}</p>
       <div class="popup__photos">
-        ${renderOfferPhotos(offer.offer.photos)}
+        ${offer.offer.photos ? renderOfferPhotos(offer.offer.photos) : null}
       </div>
     </article>`;
 
-export { renderOffer };
+export { createOfferPopup };

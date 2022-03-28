@@ -1,41 +1,14 @@
-import { enableForms } from './forms.js';
-import { generateOffers } from './data.js';
-import { renderOffer } from './templates.js';
+import { createOfferPopup } from './templates.js';
+import { setAddress } from './form.js';
 
-const coordinates = { lat: 35.65283, lng: 139.83947 };
-const zoom = 12;
-const offers = generateOffers(10);
-const address = document.querySelector('input[name="address"]');
-address.value = `${coordinates.lat}, ${coordinates.lng}`;
+let map;
 
-const map = L.map('map-canvas')
-  .on('load', () => {
-    enableForms();
-  })
-  .setView(coordinates, zoom);
+const centerCoordinates = {
+  lat: 35.68271,
+  lng: 139.75352,
+};
 
-L.tileLayer(
-  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  },
-).addTo(map);
-
-const mainIcon = L.icon({
-  iconUrl: 'img/main-pin.svg',
-  iconSize: [52, 52],
-  iconAnchor: [26, 52],
-});
-
-const mainMarker = L.marker(coordinates, {
-  draggable: true,
-  icon: mainIcon,
-});
-
-mainMarker.addTo(map);
-
-mainMarker.on('moveend', (evt) => {
-  address.value = `${evt.target.getLatLng().lat.toFixed(5)}, ${evt.target.getLatLng().lng.toFixed(5)}`;
-});
+const ZOOM_LEVEL = 14;
 
 const icon = L.icon({
   iconUrl: 'img/pin.svg',
@@ -43,7 +16,48 @@ const icon = L.icon({
   iconAnchor: [20, 40],
 });
 
-offers.forEach((offer) => {
-  const marker = L.marker(offer.location, { icon });
-  marker.addTo(map).bindPopup(renderOffer(offer));
+const mainIcon = L.icon({
+  iconUrl: 'img/main-pin.svg',
+  iconSize: [52, 52],
+  iconAnchor: [26, 52],
 });
+
+const mainMarker = L.marker(centerCoordinates, {
+  draggable: true,
+  icon: mainIcon,
+});
+
+const initMap = (onSuccess) => {
+  map = L.map('map-canvas')
+    .on('load', onSuccess)
+    .setView(centerCoordinates, ZOOM_LEVEL);
+
+  L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    },
+  ).addTo(map);
+
+  mainMarker.addTo(map);
+  setAddress(`${centerCoordinates.lat}, ${centerCoordinates.lng}`);
+
+  mainMarker.on('moveend', (evt) => {
+    const { lat, lng } = evt.target.getLatLng();
+    setAddress(`${lat.toFixed(5)}, ${lng.toFixed(5)}`);
+  });
+};
+
+const renderMarkers = (offers) => {
+  offers.forEach((offer) => {
+    const marker = L.marker(offer.location, { icon });
+    marker.addTo(map).bindPopup(createOfferPopup(offer));
+  });
+};
+
+const resetMap = () => {
+  map.setView(centerCoordinates, ZOOM_LEVEL).closePopup();
+  mainMarker.setLatLng(centerCoordinates);
+  setAddress(`${centerCoordinates.lat}, ${centerCoordinates.lng}`);
+};
+
+export { initMap, renderMarkers, resetMap };
