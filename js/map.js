@@ -1,5 +1,6 @@
-import { createOfferPopup } from './templates.js';
-import { setAddress } from './form.js';
+import { setAddress } from './forms.js';
+
+const ZOOM_LEVEL = 14;
 
 let map;
 
@@ -7,8 +8,6 @@ const centerCoordinates = {
   lat: 35.68271,
   lng: 139.75352,
 };
-
-const ZOOM_LEVEL = 14;
 
 const icon = L.icon({
   iconUrl: 'img/pin.svg',
@@ -47,7 +46,7 @@ const initMap = (onSuccess) => {
   });
 };
 
-const renderMarkers = (offers) => {
+const renderMarkers = (offers, createOfferPopup) => {
   offers.forEach((offer) => {
     const marker = L.marker(offer.location, { icon });
     marker.addTo(map).bindPopup(createOfferPopup(offer));

@@ -432,6 +432,10 @@ fieldset {
   display: none;
 }
 
+.ad-form__error {
+  color: red;
+}
+
 .features legend {
   padding-bottom: 5px;
 }
@@ -1030,6 +1034,12 @@ fieldset {
 .error__button:active {
   outline: none;
   opacity: 0.6;
+}
+
+.fail {
+  text-align: center;
+  padding: 8px;
+  color: red;
 }
 
 .visually-hidden {
