@@ -28,7 +28,7 @@ const roomsOption = {
   '100': ['0']
 };
 
-typeElement.addEventListener('change', ()=> {
+typeElement.addEventListener('change', () => {
   priceElement.placeholder = typeOption[typeElement.value];
   sliderElement.noUiSlider.updateOptions({
     range: {
@@ -100,12 +100,10 @@ const disableForms = () => {
   sliderElement.setAttribute('disabled', true);
 };
 
-const enableForms = () => {
-  formElements.forEach((el) => {
-    el.classList.remove(`${el.classList[0]}--disabled`);
-    el.childNodes.forEach((element) => {
-      element.disabled = false;
-    });
+const enableOfferForm = () => {
+  formElement.classList.remove(`${formElement.classList[0]}--disabled`);
+  formElement.childNodes.forEach((el) => {
+    el.disabled = false;
   });
   sliderElement.removeAttribute('disabled');
 };
@@ -153,7 +151,7 @@ const setFormReset = (onSuccess) => {
 
 export {
   disableForms,
-  enableForms,
+  enableOfferForm,
   resetForms,
   setAddress,
   setFormSubmit,

@@ -1,14 +1,15 @@
 import { getOffers } from './api.js';
-import { disableForms, enableForms, setFormSubmit, resetForms, setFormReset, enableSubmitButton } from './forms.js';
+import { resetFilter, setFilter } from './filter.js';
+import { disableForms, enableOfferForm, setFormSubmit, resetForms, setFormReset, enableSubmitButton } from './forms.js';
 import { initMap, renderMarkers, resetMap } from './map.js';
 import { showSuccess, showFail, showErrorMessage } from './popups.js';
-import { createOfferPopup } from './templates.js';
 
 disableForms();
 
 const onFormSuccessSubmit = () => {
   showSuccess();
   resetForms();
+  resetFilter(renderMarkers);
   enableSubmitButton();
   resetMap();
 };
@@ -23,10 +24,11 @@ setFormSubmit(onFormSuccessSubmit, onFormFailSubmit);
 setFormReset(resetMap);
 
 const onMapSuccessInit = () => {
-  enableForms();
+  enableOfferForm();
   getOffers(
     (offers) => {
-      renderMarkers(offers, createOfferPopup);
+      renderMarkers(offers);
+      setFilter(offers, renderMarkers);
     },
     showErrorMessage
   );

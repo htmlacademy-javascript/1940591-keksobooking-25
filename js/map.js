@@ -1,8 +1,12 @@
 import { setAddress } from './forms.js';
+import { createOfferPopup } from './templates.js';
 
-const ZOOM_LEVEL = 14;
+const ZOOM_LEVEL = 13;
+const MARKERS_QUANTITY = 10;
 
 let map;
+
+const markerGroup = L.layerGroup();
 
 const centerCoordinates = {
   lat: 35.68271,
@@ -31,6 +35,8 @@ const initMap = (onSuccess) => {
     .on('load', onSuccess)
     .setView(centerCoordinates, ZOOM_LEVEL);
 
+  markerGroup.addTo(map);
+
   L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -46,10 +52,11 @@ const initMap = (onSuccess) => {
   });
 };
 
-const renderMarkers = (offers, createOfferPopup) => {
-  offers.forEach((offer) => {
+const renderMarkers = (offers) => {
+  markerGroup.clearLayers();
+  offers.slice(0, MARKERS_QUANTITY).forEach((offer) => {
     const marker = L.marker(offer.location, { icon });
-    marker.addTo(map).bindPopup(createOfferPopup(offer));
+    marker.addTo(markerGroup).bindPopup(createOfferPopup(offer));
   });
 };
 

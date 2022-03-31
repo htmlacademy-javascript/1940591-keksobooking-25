@@ -1,4 +1,4 @@
-const getOffers = (onSuccess, onFail) => fetch('https://25.javascript.pages.academy/keksobooking/data')
+const getOffers = (onSuccess, onFail) => fetch('https://25.javascript.pages.academy/keksobooking/dat')
   .then((response) => {
     if (response.ok) {
       return response.json();
