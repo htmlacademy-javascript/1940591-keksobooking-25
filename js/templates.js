@@ -16,7 +16,7 @@ const renderOfferPhotos = (photos) => photos
 
 const createOfferPopup = (offer) => `
     <article class="popup">
-      <img src="${offer.author.avatar}" class="popup__avatar" width="70" height="70" alt="Аватар пользователя">
+      <img src="${offer.author.avatar ? offer.author.avatar : ''}" class="popup__avatar" width="70" height="70" alt="Аватар пользователя">
       <h3 class="popup__title">${offer.offer.title}</h3>
       <p class="popup__text popup__text--address">${offer.offer.address}</p>
       <p class="popup__text popup__text--price">${offer.offer.price} <span>₽/ночь</span></p>
@@ -24,11 +24,11 @@ const createOfferPopup = (offer) => `
       <p class="popup__text popup__text--capacity">${offer.offer.rooms} комнаты для ${offer.offer.guests} гостей</p>
       <p class="popup__text popup__text--time">Заезд после ${offer.offer.checkin}, выезд до ${offer.offer.checkout}</p>
       <ul class="popup__features">
-        ${offer.offer.features ? renderOfferFeatures(offer.offer.features) : null}
+        ${offer.offer.features ? renderOfferFeatures(offer.offer.features) : ''}
       </ul>
-      <p class="popup__description">${offer.offer.description}</p>
+      <p class="popup__description">${offer.offer.description ? offer.offer.description : ''}</p>
       <div class="popup__photos">
-        ${offer.offer.photos ? renderOfferPhotos(offer.offer.photos) : null}
+        ${offer.offer.photos ? renderOfferPhotos(offer.offer.photos) : ''}
       </div>
     </article>`;
 

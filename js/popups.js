@@ -1,49 +1,49 @@
-const successPopup = document.querySelector('#success').content.children[0];
-const failPopup = document.querySelector('#error').content.children[0];
+const successElement = document.querySelector('#success').content.children[0];
+const failElement = document.querySelector('#error').content.children[0];
 
-const showSuccessPopup = () => {
-  document.body.insertAdjacentElement('beforeend', successPopup);
+const showSuccess = () => {
+  document.body.insertAdjacentElement('beforeend', successElement);
 
-  document.addEventListener('click', successPopupClickHandler);
-  document.addEventListener('keydown', successPopupKeydownHandler);
+  document.addEventListener('click', onSuccessClick);
+  document.addEventListener('keydown', onSuccessKeydown);
 };
 
-const showFailPopup = () => {
-  document.body.insertAdjacentElement('beforeend', failPopup);
-
-  document.addEventListener('click', failPopupClickHandler);
-  document.addEventListener('keydown', failPopupKeydownHandler);
-};
-
-function successPopupClickHandler() {
-  successPopup.remove();
-  document.removeEventListener('click', successPopupClickHandler);
-  document.removeEventListener('keydown', successPopupKeydownHandler);
+function onSuccessClick() {
+  successElement.remove();
+  document.removeEventListener('click', onSuccessClick);
+  document.removeEventListener('keydown', onSuccessKeydown);
 }
 
-function successPopupKeydownHandler(evt) {
+function onSuccessKeydown(evt) {
   if (evt.key === 'Escape') {
-    successPopup.remove();
-    document.removeEventListener('click', successPopupClickHandler);
-    document.removeEventListener('keydown', successPopupKeydownHandler);
+    successElement.remove();
+    document.removeEventListener('click', onSuccessClick);
+    document.removeEventListener('keydown', onSuccessKeydown);
   }
 }
 
-function failPopupClickHandler() {
-  failPopup.remove();
-  document.removeEventListener('click', failPopupClickHandler);
-  document.removeEventListener('keydown', failPopupKeydownHandler);
+const showFail = () => {
+  document.body.insertAdjacentElement('beforeend', failElement);
+
+  document.addEventListener('click', onFailClick);
+  document.addEventListener('keydown', onFailKeydown);
+};
+
+function onFailClick() {
+  failElement.remove();
+  document.removeEventListener('click', onFailClick);
+  document.removeEventListener('keydown', onFailKeydown);
 }
 
-function failPopupKeydownHandler(evt) {
+function onFailKeydown(evt) {
   if (evt.key === 'Escape') {
-    failPopup.remove();
-    document.removeEventListener('click', failPopupClickHandler);
-    document.removeEventListener('keydown', failPopupKeydownHandler);
+    failElement.remove();
+    document.removeEventListener('click', onFailClick);
+    document.removeEventListener('keydown', onFailKeydown);
   }
 }
 
-const showFailMessage = (message) => {
+const showErrorMessage = (message) => {
   const fail = document.createElement('div');
   fail.classList.add('fail');
   fail.textContent = message;
@@ -55,4 +55,4 @@ const showFailMessage = (message) => {
   }, 5000);
 };
 
-export { showSuccessPopup, showFailPopup, showFailMessage };
+export { showSuccess, showFail, showErrorMessage };

@@ -1,18 +1,37 @@
-import { disablePage, enablePage, initForm } from './form.js';
-import { initMap, renderMarkers } from './map.js';
-import { showFailMessage } from './popups.js';
 import { getOffers } from './api.js';
+import { resetFilter, setFilter } from './filter.js';
+import { disableForms, enableOfferForm, setFormSubmit, resetForms, setFormReset, enableSubmitButton } from './forms.js';
+import { initMap, renderMarkers, resetMap } from './map.js';
+import { showSuccess, showFail, showErrorMessage } from './popups.js';
 
-disablePage();
+disableForms();
 
-initForm();
+const onFormSuccessSubmit = () => {
+  showSuccess();
+  resetForms();
+  resetFilter(renderMarkers);
+  enableSubmitButton();
+  resetMap();
+};
 
-initMap(() => {
+const onFormFailSubmit = () => {
+  showFail();
+  enableSubmitButton();
+};
+
+setFormSubmit(onFormSuccessSubmit, onFormFailSubmit);
+
+setFormReset(resetMap);
+
+const onMapSuccessInit = () => {
+  enableOfferForm();
   getOffers(
     (offers) => {
       renderMarkers(offers);
-      enablePage();
+      setFilter(offers, renderMarkers);
     },
-    showFailMessage
+    showErrorMessage
   );
-});
+};
+
+initMap(onMapSuccessInit);
