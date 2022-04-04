@@ -100,7 +100,7 @@ const disableForms = () => {
   sliderElement.setAttribute('disabled', true);
 };
 
-const enableOfferForm = () => {
+const enableForm = () => {
   formElement.classList.remove(`${formElement.classList[0]}--disabled`);
   formElement.childNodes.forEach((el) => {
     el.disabled = false;
@@ -129,7 +129,7 @@ const enableSubmitButton = () => {
   submitElement.textContent = 'Опубликовать';
 };
 
-const setFormSubmit = (onSuccess, onFail) => {
+const onFormSubmit = (onSuccess, onFail) => {
   formElement.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
@@ -141,20 +141,20 @@ const setFormSubmit = (onSuccess, onFail) => {
   });
 };
 
-const setFormReset = (onSuccess) => {
+const onFormReset = (callback) => {
   resetElement.addEventListener('click', (evt) => {
     evt.preventDefault();
     resetForms();
-    onSuccess();
+    callback();
   });
 };
 
 export {
   disableForms,
-  enableOfferForm,
+  enableForm,
   resetForms,
   setAddress,
-  setFormSubmit,
-  setFormReset,
+  onFormSubmit,
+  onFormReset,
   enableSubmitButton,
 };

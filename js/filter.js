@@ -1,136 +1,73 @@
 import { debounce } from './util.js';
 
-const filterElement = document.querySelector('.map__filters');
-const typeElement = filterElement.querySelector('select[name="housing-type"]');
-const roomsElement = filterElement.querySelector('select[name="housing-rooms"]');
-const guestsElement = filterElement.querySelector('select[name="housing-guests"]');
-const priceElement = filterElement.querySelector('select[name="housing-price"]');
-const featureElements = filterElement.querySelectorAll('input[name="features"]');
+const filtersForm = document.querySelector('.map__filters');
+const typeElement = filtersForm.querySelector('select[name="housing-type"]');
+const priceElement = filtersForm.querySelector('select[name="housing-price"]');
+const roomsElement = filtersForm.querySelector('select[name="housing-rooms"]');
+const guestsElement = filtersForm.querySelector('select[name="housing-guests"]');
+const featureElements = filtersForm.querySelector('#housing-features');
 
 let offersCopy;
+let selectedFeatures = [];
 
-const filterOptions = {
-  type: 'any',
-  price: 'any',
-  rooms: 'any',
-  guests: 'any',
-  features: [],
-};
-
-
-const isTypeInFilter = (type) => filterOptions.type !== 'any' ? filterOptions.type === type : true;
-const isRoomsInFilter = (rooms) => filterOptions.rooms !== 'any' ? Number(filterOptions.rooms) === rooms : true;
-const isGuestsInFilter = (guests) => filterOptions.guests !== 'any' ? Number(filterOptions.guests) === guests : true;
-
-const isPriceInFilter = (price) => {
-  if (filterOptions.price === 'low') {
+const filterByType = (type) => typeElement.value === type || typeElement.value === 'any';
+const filterByPrice = (price) => {
+  if (priceElement.value === 'low') {
     return price <= 10000;
   }
-  if (filterOptions.price === 'middle') {
+  if (priceElement.value === 'middle') {
     return price > 10000 && price < 50000;
   }
-  if (filterOptions.price === 'high') {
+  if (priceElement.value === 'high') {
     return price >= 50000;
   }
   return true;
 };
-
-const isFeaturesInFilter = (features) => {
-  if (filterOptions.features.length === 0) {
-    return true;
-  }
-  if (!features) {
+const filterByRoomsCount = (roomsCount) => Number(roomsElement.value) === roomsCount || roomsElement.value === 'any';
+const filterByGuestsCount = (guestsCount) => Number(guestsElement.value) === guestsCount || guestsElement.value === 'any';
+const filterByFeatures = (features) => {
+  if (selectedFeatures.length > 0 && !features) {
     return false;
   }
-  if (filterOptions.features.length > features.length) {
-    return false;
-  }
-  if (features.includes(...filterOptions.features)) {
-    return true;
-  }
+  return selectedFeatures.every((selected) => features.includes(selected));
 };
 
-
-const filterOffers = (offers, onSuccess) => {
+const filterOffers = (offers, renderMarkers) => {
   const filteredOffers = offers
-    .slice()
-    .filter(({ offer }) => {
-      const filters = [];
+    .filter(({ offer }) =>
+      filterByType(offer.type) &&
+      filterByPrice(offer.price) &&
+      filterByRoomsCount(offer.rooms) &&
+      filterByGuestsCount(offer.guests) &&
+      filterByFeatures(offer.features)
+    );
 
-      filters.push(isTypeInFilter(offer.type));
-      filters.push(isPriceInFilter(offer.price));
-      filters.push(isRoomsInFilter(offer.rooms));
-      filters.push(isGuestsInFilter(offer.guests));
-      filters.push(isFeaturesInFilter(offer.features));
-
-      return filters.every((filter) => filter);
-    });
-
-  onSuccess(filteredOffers);
+  renderMarkers(filteredOffers);
 };
 
-
-const setPriceChange = (offers, onSuccess) => {
-  priceElement.addEventListener('change', debounce((evt) => {
-    filterOptions.price = evt.target.value;
-
-    filterOffers(offers, onSuccess);
-  }));
-};
-
-const setTypeChange = (offers, onSuccess) => {
-  typeElement.addEventListener('change', debounce((evt) => {
-    filterOptions.type = evt.target.value;
-
-    filterOffers(offers, onSuccess);
-  }));
-};
-
-const setRoomsChange = (offers, onSuccess) => {
-  roomsElement.addEventListener('change', debounce((evt) => {
-    filterOptions.rooms = evt.target.value;
-
-    filterOffers(offers, onSuccess);
-  }));
-};
-
-const setGuestsChange = (offers, onSuccess) => {
-  guestsElement.addEventListener('change', debounce((evt) => {
-    filterOptions.guests = evt.target.value;
-
-    filterOffers(offers, onSuccess);
-  }));
-};
-
-const setFeaturesClick = (offers, onSuccess) => {
-  featureElements.forEach((el) => {
-    el.addEventListener('click', debounce((evt) => {
-      if (evt.target.checked) {
-        filterOptions.features.push(evt.target.value);
-      } else {
-        filterOptions.features = filterOptions.features.filter((feature) => feature !== evt.target.value);
-      }
-      filterOffers(offers, onSuccess);
-    }));
-  });
-};
-
-const enableFilter = () => {
-  filterElement.classList.remove(`${filterElement.classList[0]}--disabled`);
-  filterElement.childNodes.forEach((el) => {
+const initFilter = (offers, renderMarkers) => {
+  offersCopy = offers.slice();
+  filtersForm.classList.remove(`${filtersForm.classList[0] }--disabled`);
+  filtersForm.childNodes.forEach((el) => {
     el.disabled = false;
   });
-};
-
-const setFilter = (offers, onSuccess) => {
-  offersCopy = offers.slice();
-
-  enableFilter();
-  setTypeChange(offers, onSuccess);
-  setPriceChange(offers, onSuccess);
-  setRoomsChange(offers, onSuccess);
-  setGuestsChange(offers, onSuccess);
-  setFeaturesClick(offers, onSuccess);
+  const debouncedFilterOffers = debounce(() => {
+    filterOffers(offers, renderMarkers);
+  });
+  typeElement.addEventListener('change', debouncedFilterOffers);
+  priceElement.addEventListener('change', debouncedFilterOffers);
+  roomsElement.addEventListener('change', debouncedFilterOffers);
+  guestsElement.addEventListener('change', debouncedFilterOffers);
+  featureElements.addEventListener('click', (evt) => {
+    if (evt.target.tagName === 'INPUT') {
+      if (evt.target.checked) {
+        selectedFeatures.push(evt.target.value);
+      } else {
+        selectedFeatures = selectedFeatures.filter((selectedFeature) => selectedFeature !== evt.target.value);
+      }
+      debouncedFilterOffers();
+    }
+  });
 };
 
 const resetFilter = (cb) => {
@@ -139,4 +76,4 @@ const resetFilter = (cb) => {
   }
 };
 
-export { setFilter, resetFilter };
+export { initFilter, resetFilter };
