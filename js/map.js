@@ -1,4 +1,4 @@
-import { setAddress } from './forms.js';
+import { setAddress } from './form.js';
 import { createOfferPopup } from './templates.js';
 
 const ZOOM_LEVEL = 13;

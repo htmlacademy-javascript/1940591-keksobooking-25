@@ -484,6 +484,7 @@ fieldset {
   height: 70px;
   background-color: #e4e4de;
   border-radius: 5px;
+  overflow: hidden;
 }
 .ad-form__element--submit {
   -ms-flex-preferred-size: 100%;

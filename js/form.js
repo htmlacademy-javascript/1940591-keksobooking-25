@@ -1,17 +1,23 @@
 import { sendOffer } from './api.js';
 
 const formElements = document.querySelectorAll('form');
-const formElement = formElements[1];
-const addressElement = formElement.querySelector('input[name="address"]');
-const typeElement = formElement.querySelector('select[name="type"]');
-const priceElement = formElement.querySelector('input[name="price"]');
-const sliderElement = formElement.querySelector('.ad-form__slider');
-const timeinElement = formElement.querySelector('select[name="timein"]');
-const timeoutElement = formElement.querySelector('select[name="timeout"]');
-const roomsElement = formElement.querySelector('select[name="rooms"]');
-const capacityElement = formElement.querySelector('select[name="capacity"]');
-const submitElement = formElement.querySelector('button[type="submit"]');
-const resetElement = formElement.querySelector('button[type="reset"]');
+const offerForm = formElements[1];
+const avatarChooserElement = offerForm.querySelector('input[name="avatar"]');
+const avatarPreviewElement = offerForm.querySelector('.ad-form-header__preview img');
+const addressElement = offerForm.querySelector('input[name="address"]');
+const typeElement = offerForm.querySelector('select[name="type"]');
+const priceElement = offerForm.querySelector('input[name="price"]');
+const sliderElement = offerForm.querySelector('.ad-form__slider');
+const timeinElement = offerForm.querySelector('select[name="timein"]');
+const timeoutElement = offerForm.querySelector('select[name="timeout"]');
+const roomsElement = offerForm.querySelector('select[name="rooms"]');
+const capacityElement = offerForm.querySelector('select[name="capacity"]');
+const imagesChooserElement = offerForm.querySelector('input[name="images"]');
+const imagesPreviewElement = offerForm.querySelector('.ad-form__photo');
+const submitElement = offerForm.querySelector('button[type="submit"]');
+const resetElement = offerForm.querySelector('button[type="reset"]');
+
+const fileTypes = ['gif', 'jpg', 'jpeg', 'png'];
 
 const typeOption = {
   'bungalow': 0,
@@ -27,6 +33,16 @@ const roomsOption = {
   '3': ['1', '2', '3'],
   '100': ['0']
 };
+
+avatarChooserElement.addEventListener('change', (evt) => {
+  const file = evt.target.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = fileTypes.some((it) => fileName.endsWith(it));
+
+  if (matches) {
+    avatarPreviewElement.src = URL.createObjectURL(file);
+  }
+});
 
 typeElement.addEventListener('change', () => {
   priceElement.placeholder = typeOption[typeElement.value];
@@ -67,8 +83,17 @@ priceElement.addEventListener('input', () => {
   sliderElement.noUiSlider.updateOptions({ start: priceElement.value });
 });
 
+imagesChooserElement.addEventListener('change', (evt) => {
+  const file = evt.target.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = fileTypes.some((it) => fileName.endsWith(it));
 
-const pristine = window.Pristine(formElement, {
+  if (matches) {
+    imagesPreviewElement.innerHTML = `<img src="${URL.createObjectURL(file)}" width="100%" height="100%">`;
+  }
+});
+
+const pristine = window.Pristine(offerForm, {
   classTo: 'ad-form__element',
   errorClass: 'ad-form__element--invalid',
   successClass: 'ad-form__element--valid',
@@ -100,9 +125,9 @@ const disableForms = () => {
   sliderElement.setAttribute('disabled', true);
 };
 
-const enableOfferForm = () => {
-  formElement.classList.remove(`${formElement.classList[0]}--disabled`);
-  formElement.childNodes.forEach((el) => {
+const enableForm = () => {
+  offerForm.classList.remove(`${offerForm.classList[0]}--disabled`);
+  offerForm.childNodes.forEach((el) => {
     el.disabled = false;
   });
   sliderElement.removeAttribute('disabled');
@@ -129,8 +154,8 @@ const enableSubmitButton = () => {
   submitElement.textContent = 'Опубликовать';
 };
 
-const setFormSubmit = (onSuccess, onFail) => {
-  formElement.addEventListener('submit', (evt) => {
+const onFormSubmit = (onSuccess, onFail) => {
+  offerForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
     const isValid = pristine.validate();
@@ -141,20 +166,20 @@ const setFormSubmit = (onSuccess, onFail) => {
   });
 };
 
-const setFormReset = (onSuccess) => {
+const onFormReset = (callback) => {
   resetElement.addEventListener('click', (evt) => {
     evt.preventDefault();
     resetForms();
-    onSuccess();
+    callback();
   });
 };
 
 export {
   disableForms,
-  enableOfferForm,
+  enableForm,
   resetForms,
   setAddress,
-  setFormSubmit,
-  setFormReset,
+  onFormSubmit,
+  onFormReset,
   enableSubmitButton,
 };
