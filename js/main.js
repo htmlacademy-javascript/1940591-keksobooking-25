@@ -21,7 +21,10 @@ const onFormFailSubmit = () => {
 
 onFormSubmit(onFormSuccessSubmit, onFormFailSubmit);
 
-onFormReset(resetMap);
+onFormReset(() => {
+  resetMap();
+  resetFilter(renderMarkers);
+});
 
 initMap(() => {
   enableForm();
