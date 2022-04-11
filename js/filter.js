@@ -6,6 +6,10 @@ const priceElement = filtersForm.querySelector('select[name="housing-price"]');
 const roomsElement = filtersForm.querySelector('select[name="housing-rooms"]');
 const guestsElement = filtersForm.querySelector('select[name="housing-guests"]');
 const featureElements = filtersForm.querySelector('#housing-features');
+const priceOption = {
+  'low': 10000,
+  'high': 50000,
+};
 
 let offersCopy;
 let selectedFeatures = [];
@@ -13,13 +17,13 @@ let selectedFeatures = [];
 const filterByType = (type) => typeElement.value === type || typeElement.value === 'any';
 const filterByPrice = (price) => {
   if (priceElement.value === 'low') {
-    return price <= 10000;
+    return price <= priceOption.low;
   }
   if (priceElement.value === 'middle') {
-    return price > 10000 && price < 50000;
+    return price > priceOption.low && price < priceOption.high;
   }
   if (priceElement.value === 'high') {
-    return price >= 50000;
+    return price >= priceOption.high;
   }
   return true;
 };
@@ -70,9 +74,9 @@ const initFilter = (offers, renderMarkers) => {
   });
 };
 
-const resetFilter = (cb) => {
+const resetFilter = (renderMarkers) => {
   if (offersCopy) {
-    cb(offersCopy);
+    renderMarkers(offersCopy);
   }
 };
 
